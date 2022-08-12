@@ -1,18 +1,20 @@
 package de.ugur.bot;
 
-import de.ugur.bot.commands.admin.*;
-import de.ugur.bot.commands.info.HelpCommand;
-import de.ugur.bot.commands.info.InfoCommand;
-import de.ugur.bot.commands.test.TestCommand;
-import de.ugur.bot.commands.test.UptimeCommand;
-import de.ugur.bot.manage.MySQL;
-import de.ugur.bot.manage.SQLManager;
-import de.ugur.bot.ticketsystem.ButtonClick;
-import de.ugur.bot.ticketsystem.Commands;
+import de.ugur.bot.bewerben.SetBewerbung;
+import de.ugur.bot.slashCommands.devonly.ReactionRoles;
+import de.ugur.bot.slashCommands.devonly.RulesCommand;
+import de.ugur.bot.slashCommands.devonly.UpdateCommands;
+import de.ugur.bot.slashCommands.info.HelpCommand;
+import de.ugur.bot.slashCommands.info.InfoCommand;
+import de.ugur.bot.slashCommands.moderation.*;
+import de.ugur.bot.slashCommands.test.TestCommand;
+import de.ugur.bot.manager.JoinManager;
+import de.ugur.bot.slashCommands.tags.TagCommand;
+import de.ugur.bot.ticketsystem.*;
 import de.ugur.bot.events.ReadyListener;
-import de.ugur.bot.ticketsystem.SelectMenu;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -23,26 +25,37 @@ public class Bot {
 
     private final JDA jda;
 
+    String guildid = Config.get("guildid");
     public Bot() throws LoginException, InterruptedException {
 
-        MySQL.connect();
-        SQLManager.onCreate();
+
 
         JDABuilder builder = JDABuilder.createDefault(Config.get("token"));
         builder.disableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE);
         builder.setBulkDeleteSplittingEnabled(false);
         builder.disableIntents(GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_TYPING);
-        builder.enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT);
+        builder.enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_EMOJIS_AND_STICKERS);
         builder.setLargeThreshold(50);
 
-        builder.setActivity(Activity.playing("Minecraft"));
+        builder.setActivity(Activity.playing("auf Nexusnight.net")).setStatus(OnlineStatus.ONLINE);
         builder.addEventListeners(new ReadyListener());
-        builder.addEventListeners(new ButtonClick());
+        builder.addEventListeners(new TicketButtonSystem());
         builder.addEventListeners(new SelectMenu());
 
-        //Commands
-        builder.addEventListeners(new Commands());
+        //Ticket System
+        builder.addEventListeners(new Bewerbung());
+        builder.addEventListeners(new BugReport());
+        builder.addEventListeners(new PlayerReport());
+        builder.addEventListeners(new TeamlerReport());
+        builder.addEventListeners(new TicketButtonSystem());
+        builder.addEventListeners(new SelectMenu());
 
+        //Manager
+        builder.addEventListeners(new JoinManager());
+        builder.addEventListeners(new ReactionRoles());
+
+
+        //devonly
 
         jda = builder.build();
 
@@ -56,12 +69,16 @@ public class Bot {
         new TestCommand(jda, Config.get("guildid"));
         new ServerInfoCommand(jda, Config.get("guildid"));
         new UserInfoCommand(jda, Config.get("guildid"));
+        new Commands(jda, Config.get("guildid"));
         new ClearCommand(jda, Config.get("guildid"));
         new BanCommand(jda, Config.get("guildid"));
         new KickCommand(jda, Config.get("guildid"));
         new SayCommand(jda, Config.get("guildid"));
-        new UptimeCommand(jda, Config.get("guildid"));
         new UnbanCommand(jda, Config.get("guildid"));
+        new RulesCommand(jda, Config.get("guildid"));
+        new TagCommand(jda, Config.get("guildid"));
+        new SetBewerbung(jda, guildid);
+        new UpdateCommands(jda, guildid);
     }
 
     public static void main(String[] args) {
@@ -82,7 +99,5 @@ public class Bot {
     public JDA getJda() {
         return jda;
     }
-
-
 
 }
