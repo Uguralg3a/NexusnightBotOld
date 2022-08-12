@@ -1,4 +1,4 @@
-package de.ugur.bot.commands.admin;
+package de.ugur.bot.slashCommands.moderation;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
@@ -37,7 +37,7 @@ public class KickCommand extends ListenerAdapter {
         if (event.getGuild() == null)
             return;
         switch (event.getName()) {
-            case "ban":
+            case "kick":
                 Member member = event.getOption("user").getAsMember(); // the "user" option is required, so it doesn't need a null-check here
                 User user = event.getOption("user").getAsUser();
                 kick(event, user, member);
@@ -60,7 +60,7 @@ public class KickCommand extends ListenerAdapter {
             return;
         }
 
-        if (member != null && !selfMember.canInteract(member) || member.getRoles().equals("970752386681417759") ||member.hasPermission(Permission.ADMINISTRATOR, Permission.BAN_MEMBERS)) {
+        if (member != null && !selfMember.canInteract(member) || member.getRoles().equals("1001577950682042448") ||member.hasPermission(Permission.ADMINISTRATOR, Permission.BAN_MEMBERS)) {
             hook.sendMessage("Ich kann dieses Mitglied nicht kicken, weil er zu mächtig ist!").queue();
             return;
         }
@@ -73,7 +73,8 @@ public class KickCommand extends ListenerAdapter {
         // Ban the user and send a success response
         event.getGuild().kick(user, reason)
                 .reason(reason) // audit-log reason
-                .flatMap(v -> hook.sendMessage(user.getAsTag() + " wurde gebannt!"))
+                .flatMap(v -> hook.sendMessage(user.getAsTag() + " wurde gekickt!"))
                 .queue();
+
     }
 }

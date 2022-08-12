@@ -3,6 +3,7 @@ package de.ugur.bot.ticketsystem;
 import de.ugur.bot.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -10,6 +11,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.ItemComponent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -20,9 +22,22 @@ import java.awt.*;
 
 public class Commands extends ListenerAdapter {
 
+    private final JDA jda;
+
+    public Commands(JDA jda, String guildId) {
+        this.jda = jda;
+        registerCommands(guildId);
+        jda.addEventListener(this);
+    }
+
+    private void registerCommands(String guildId) {
+        Guild guild = jda.getGuildById(guildId); // Discord Server von der übergebenden ID auflösen
+
+        guild.upsertCommand("setticket", "setticket").setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)).queue();
+    }
     @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.getMessage().getContentStripped().equalsIgnoreCase(Config.get("prefix") + "setticket")) {
+    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+        if (event.getName().equals("setticket")) {
             String roles = String.valueOf(event.getMember().getRoles());
             if (roles.contains("™️ × TEAM")) {
                 EmbedBuilder embed = new EmbedBuilder();

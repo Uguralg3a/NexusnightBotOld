@@ -1,4 +1,4 @@
-package de.ugur.bot.commands.info;
+package de.ugur.bot.slashCommands.info;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -39,49 +39,13 @@ public class HelpCommand extends ListenerAdapter {
                                     .addOption("Test", "Test")
                                     .addOption("Info", "Info")
                                     .addOption("Admin", "Admin")
+                                    .addOption("tag", "tag")
+                                    .addOption("Moderation", "Moderation")
                                     .build())
                     .queue();
 
         }
     }
-
-    /*@Override
-    public void onButtonInteraction(ButtonInteractionEvent event) {
-        if (event.getComponentId().equals("Home")) {
-            EmbedBuilder homeEmbed = new EmbedBuilder()
-                    .setTitle("Home")
-                    .setDescription("Bitte wähle eine Kategorie aus!")
-                    .setImage("https://cdn.discordapp.com/icons/970326059780292638/4fc53d6849eb1baefb4e3933e62ab37a.png?size=1024");
-
-            event.editMessageEmbeds(homeEmbed.build()).queue();
-        } else if (event.getComponentId().equals("Test")) {
-            EmbedBuilder testEmbed = new EmbedBuilder()
-                            .setTitle("Test Commands")
-                            .setDescription("Hier werden alle Test Commands aufgelistet!")
-                            .addField("Test", "Ist ein Test Command!", Boolean.parseBoolean(""))
-                            .addField("apictbu", "Ich weiß selber nicht wofür der da ist", Boolean.parseBoolean(""))
-                            .setImage("https://cdn.discordapp.com/icons/970326059780292638/4fc53d6849eb1baefb4e3933e62ab37a.png?size=1024");
-
-            event.editMessageEmbeds(testEmbed.build()).queue();
-        } else if (event.getComponentId().equals("Info")) {
-            EmbedBuilder infoEmbed = new EmbedBuilder()
-                    .setTitle("Info Commands")
-                    .setDescription("Hier werden alle Info Commands aufgelistet!")
-                    .addField("Help", "Zeigt dir diese Liste an", Boolean.parseBoolean(""))
-                    .addField("Info", "Zeigt dir Informationen an", Boolean.parseBoolean(""))
-                    .setImage("https://cdn.discordapp.com/icons/970326059780292638/4fc53d6849eb1baefb4e3933e62ab37a.png?size=1024");
-
-            event.editMessageEmbeds(infoEmbed.build()).queue();
-        }else if (event.getComponentId().equals("Admin")) {
-            EmbedBuilder adminEmbed = new EmbedBuilder()
-                    .setTitle("Admin Commands")
-                    .setDescription("Hier werden alle Admin Commands aufgelistet!")
-                    .addField("Clear", "Löscht nachrichten (Coming Soon)", Boolean.parseBoolean(""))
-                    .setImage("https://cdn.discordapp.com/icons/970326059780292638/4fc53d6849eb1baefb4e3933e62ab37a.png?size=1024");
-
-            event.editMessageEmbeds(adminEmbed.build()).queue();
-        }
-    }*/
 
     @Override
     public void onSelectMenuInteraction(SelectMenuInteractionEvent event) {
@@ -90,8 +54,8 @@ public class HelpCommand extends ListenerAdapter {
                 EmbedBuilder testEmbed = new EmbedBuilder()
                         .setTitle("Test Commands")
                         .setDescription("Hier werden alle Test Commands aufgelistet!")
-                        .addField("Test", "Ist ein Test Command!", Boolean.parseBoolean(""))
-                        .addField("apictbu", "Ich weiß selber nicht wofür der da ist", Boolean.parseBoolean(""))
+                        .addField("Test", "Ist ein Test Command!", true)
+                        .addField("Uptime", "Ich weiß selber nicht wofür der da ist", true)
                         .setImage("https://cdn.discordapp.com/icons/970326059780292638/4fc53d6849eb1baefb4e3933e62ab37a.png?size=1024");
 
                 event.editMessageEmbeds(testEmbed.build()).queue();
@@ -114,14 +78,25 @@ public class HelpCommand extends ListenerAdapter {
                 EmbedBuilder adminEmbed = new EmbedBuilder()
                         .setTitle("Admin Commands")
                         .setDescription("Hier werden alle Admin Commands aufgelistet!")
-                        .addField("serverinfo", "Zeigt dir info über dem server an", Boolean.parseBoolean(""))
-                        .addField("userinfo", "Zeigt dir info über den user an", Boolean.parseBoolean(""))
-                        .addField("clear", "Löscht nachrichten", Boolean.parseBoolean(""))
-                        .addField("ban", "Bannt mitglieder", Boolean.parseBoolean(""))
-                        .addField("kick", "kickt mitglieder", Boolean.parseBoolean(""))
+                        .addField("setticket", "Setzt das Ticket", true)
                         .setImage("https://cdn.discordapp.com/icons/970326059780292638/4fc53d6849eb1baefb4e3933e62ab37a.png?size=1024");
 
                 event.editMessageEmbeds(adminEmbed.build()).queue();
+            } else if (event.getValues().contains("tag")) {
+                EmbedBuilder tagEmbed = new EmbedBuilder()
+                        .setTitle("/tag tag");
+                event.editMessageEmbeds(tagEmbed.build()).queue();
+            } else if (event.getValues().contains("Moderation")) {
+                EmbedBuilder mod = new EmbedBuilder()
+                        .setTitle("Moderation Commands")
+                        .setDescription("Hier werden alle Moderation Commands aufgelistet!")
+                        .addField("serverinfo", "Zeigt dir info über dem server an", true)
+                        .addField("userinfo", "Zeigt dir info über den user an", true)
+                        .addField("clear", "Löscht nachrichten", true)
+                        .addField("ban", "Bannt mitglieder", true)
+                        .addField("kick", "kickt mitglieder", true);
+
+                event.editMessageEmbeds(mod.build()).queue();
             }
         }
     }

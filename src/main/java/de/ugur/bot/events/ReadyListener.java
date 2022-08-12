@@ -17,9 +17,7 @@ public class ReadyListener extends ListenerAdapter {
 
     @Override
     public void onReady(@Nonnull ReadyEvent event) {
-        System.out.printf("{} is ready", event.getJDA().getSelfUser().getAsTag());
-        EmbedBuilder readyEmbed = new EmbedBuilder()
-                .setTitle("Bereit")
-                .setDescription("Ich wurde gestartet *leider*");
+        System.out.printf(event.getJDA().getSelfUser().getAsTag() + " is ready");
+
     }
 }

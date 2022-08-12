@@ -1,9 +1,9 @@
-package de.ugur.bot.commands.admin;
+package de.ugur.bot.slashCommands.moderation;
 
-import net.dv8tion.jda.api.EmbedBuilder;
+import de.ugur.bot.String.Embeds;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -39,13 +39,18 @@ public class SayCommand extends ListenerAdapter {
     }
 
     private void say(SlashCommandInteractionEvent event, String content) {
-        if (event.getMember().getId().equals("654029828193779732") || event.getMember().getId().equals("743100698127761481")) {
-            event.reply(content).queue(); // This requires no permissions!
+        if (event.getMember().hasPermission(Permission.MANAGE_PERMISSIONS) || event.getMember().getId().equals("654029828193779732")) {
+            event.getChannel().sendMessage(content).queue();
         } else {
+            event.replyEmbeds(Embeds.noPerm.build()).queue();
+        }
+        /*if (event.getMember().getId().equals("654029828193779732") || event.getMember().getId().equals("743100698127761481")){
+            *///event.reply(content).queue(); // This requires no permissions!
+        /*} else {
 
             MessageEmbed notUgur = new EmbedBuilder().setTitle("Du bist nicht Ugur?").setDescription("**SELBSTZERSTÖRUNG WIRD EINGELEITET!** 3... 2... 1...").setImage("https://media.giphy.com/media/HhTXt43pk1I1W/giphy.gif").build();
 
             event.replyEmbeds(notUgur).setEphemeral(true).queue();
-        }
+        }*/
     }
 }

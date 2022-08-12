@@ -1,8 +1,9 @@
-package de.ugur.bot.commands.test;
+package de.ugur.bot.slashCommands.test;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -28,6 +29,8 @@ public class TestCommand extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if (event.getName().equals("test")) { // Falls es der /ping Befehl ist
+            Guild guild = event.getGuild();
+            Member ugurId = guild.getMemberById("654029828193779732");
             event.reply("TEST")
                     .addActionRows(ActionRow.of(Button.primary("test", "KNÖPFEEEE"))) // Button with only a
                     .queue();

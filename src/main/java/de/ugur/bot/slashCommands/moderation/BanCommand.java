@@ -1,5 +1,6 @@
-package de.ugur.bot.commands.admin;
+package de.ugur.bot.slashCommands.moderation;
 
+import de.ugur.bot.String.Embeds;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -50,7 +51,7 @@ public class BanCommand extends ListenerAdapter {
         InteractionHook hook = event.getHook(); // This is a special webhook that allows you to send messages without having permissions in the channel and also allows ephemeral messages
         hook.setEphemeral(false); // All messages here will now be ephemeral implicitly
         if (!event.getMember().hasPermission(Permission.BAN_MEMBERS)) {
-            hook.sendMessage("Du hast nicht die Rechte, um dieses Mitglied zu bannen!").queue();
+            hook.sendMessageEmbeds(Embeds.noPerm.build()).queue();
             return;
         }
 
@@ -60,7 +61,7 @@ public class BanCommand extends ListenerAdapter {
             return;
         }
 
-        if (member != null && !selfMember.canInteract(member) || member.getRoles().equals("970752386681417759") ||member.hasPermission(Permission.ADMINISTRATOR, Permission.BAN_MEMBERS)) {
+        if (member != null && !selfMember.canInteract(member) || member.getRoles().equals("1001577950682042448") ||member.hasPermission(Permission.ADMINISTRATOR, Permission.BAN_MEMBERS)) {
             hook.sendMessage("Ich kann dieses Mitglied nicht bannen, weil er zu mächtig ist!").queue();
             return;
         }
